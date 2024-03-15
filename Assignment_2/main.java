@@ -41,6 +41,7 @@ public class main {
         node goal = env[goalRow][goalCol];
         node current = start;
 
+        //min heap implementation with priorityqueue
         PriorityQueue<node> openList = new PriorityQueue<>(Comparator.comparingInt(node::getF));
         ArrayList<node> closedList = new ArrayList<node>();
 
@@ -90,13 +91,17 @@ public class main {
             System.out.println("no path could be found");
         }
 
-        LinkedList<node> path = new LinkedList<>();
+        ArrayList<node> path = new ArrayList<>();
         node temp = current; 
         
+        //mapping out the path
         while (temp != null) {
-            path.addFirst(temp); // Add the node to the beginning of the list
-            temp = temp.getParent(); // Move to the parent node
+            path.add(temp); 
+            temp = temp.getParent(); 
         }
+
+        //reversing arraylist to show path from start to finish not other way arround
+        Collections.reverse(path);
     
         System.out.println("Path:");
         for (node p : path) {
@@ -104,7 +109,7 @@ public class main {
             if (!p.equals(start) && !p.equals(goal)) {
                 env[p.getRow()][p.getCol()].setType(7); 
                 try {
-                    Thread.sleep(500); // Delay for 1 second
+                    Thread.sleep(500); 
                 } catch (InterruptedException e) {
                     System.out.println("Oops!");
                 }
@@ -114,15 +119,13 @@ public class main {
         }
         
         System.out.println("Final Path:");
+        System.out.println("Path Lenght: "  + path.size());
         printEnv(env);
         
         
 
         sc.close();
     }
-
-
-
 
     //prints the environment to the terminal
     public static void printEnv(node[][] env){
@@ -141,13 +144,12 @@ public class main {
 
     //calculating g from current node to next node assuming next is directly nexto current node
     public static int calcG(node current, node next){
-        //if diagonal move, cost is 14, else 10
-        int cost = current.getG(); // Get parent's g cost
-        if(Math.abs(current.getCol() - next.getCol()) == 1 && Math.abs(current.getRow() - next.getRow()) == 1) {
-            cost += 14; // Diagonal
-        }
-        else {
-            cost += 10; // Straight
+        int cost = current.getG();
+
+        if(Math.abs(current.getCol() - next.getCol()) == 1 && Math.abs(current.getRow() - next.getRow()) == 1){
+            cost += 14;
+        } else {
+            cost += 10;
         }
         return cost;
     }
